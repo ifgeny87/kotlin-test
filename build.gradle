@@ -1,0 +1,98 @@
+buildscript {
+	ext.kotlin_version = '1.1.0'    // версия Kotlin
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
+}
+
+plugins {
+	id "com.eriwen.gradle.css" version "2.14.0"
+}
+
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'kotlin2js'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+	compile 'org.jetbrains.kotlinx:kotlinx-html-js:0.6.3'
+	compile 'org.jetbrains.kotlinx:kotlinx-html:0.6.3'
+}
+
+/**
+ * Настройка плагина gradle-css-plugin
+ */
+css.source {
+	// определяю файлы-ресурсы стилей
+	dev {
+		css {
+			srcDir "src/main/kotlin/styles"
+			include "*.less"
+			include "*.css"
+			exclude "_*.less"
+			exclude "*.min.css"
+		}
+	}
+}
+
+lesscss {
+	// дерево .less и .css файлов
+	source = css.source.dev.css.asFileTree
+	// папка cо стилями
+	dest = "${buildDir}/styles/tmp"
+
+	// в начале удаляются временные файлы
+	// потому что задача не пересоздает файлы
+	doFirst {
+		println "[ES] delete temp " + dest
+		dest.deleteDir()
+	}
+}
+
+csslint {
+	source = lesscss.dest
+	dest = "${buildDir}/csslint.out"
+
+	// задача зависит от lesscss
+	dependsOn lesscss
+}
+
+combineCss {
+	source = lesscss.dest
+	dest = "${buildDir}/styles/style.css"
+
+	// задача зависит от lesscss
+	dependsOn lesscss
+}
+
+minifyCss {
+	source = combineCss
+	dest = "${buildDir}/styles/style-min.css"
+	yuicompressor { // Optional
+		lineBreakPos = -1
+	}
+
+	// задача зависит от combineCss
+	dependsOn combineCss
+}
+
+gzipCss {
+	source = minifyCss
+	dest = "${buildDir}/all.2.0.4.css"
+
+	// задача зависит от minifyCss
+	dependsOn minifyCss
+}

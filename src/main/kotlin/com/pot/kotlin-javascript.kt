@@ -5,13 +5,21 @@ import kotlinx.html.*
 import kotlinx.html.dom.*
 import kotlinx.html.stream.createHTML
 
+import com.pot.factorial
+import kotlinx.html.js.onClickFunction
+
 fun printHello() {
 	window.onload = {
 		document.body!!.append {
+			h1 { +"🐍 Snake" }
 			div {
 				id = "container"
 				style = "color: green"
 				+"Here is container"
+			}
+			button {
+				+"Click me Bro!"
+				onClickFunction = { event -> onButtonClick(event) }
 			}
 		}
 	}
@@ -19,8 +27,6 @@ fun printHello() {
 	var counter = 0
 
 	window.setInterval({
-		counter++
-
 		val myDiv = document.create.div("panel") {
 			p {
 				+"Here is "
@@ -28,11 +34,13 @@ fun printHello() {
 			}
 		}
 
+		val fac = factorial(++counter)
+
 		document.getElementById("container")!!
 				.appendChild(myDiv)
 				.append {
 					div {
-						+"added at $counter"
+						+"Factorial of $counter is $fac"
 					}
 				}
 
@@ -40,8 +48,8 @@ fun printHello() {
 	}, 5_000)
 }
 
-fun onButtonClick(a: Any) {
-	println(a)
+fun onButtonClick(event: Any) {
+	println(event)
 }
 
 fun main(args: Array<String>) {

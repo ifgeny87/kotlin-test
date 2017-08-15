@@ -24,6 +24,7 @@ fun printHello() {
 	window.onload = {
 		document.body!!
 				.append {
+					h1 { +"🐍 Snake" }
 					div {
 						+"Div text = "
 						+div1
@@ -32,6 +33,10 @@ fun printHello() {
 						id = "container"
 						style = "color: red"
 						+"Here is container"
+					}
+					button {
+						+"Click me Bro!"
+						onClickFunction = { event -> onButtonClick(event) }
 					}
 				}
 
@@ -68,4 +73,8 @@ val tick = {
 	println("tick-tack " + Date())
 
 	nextTick()
+}
+
+fun onButtonClick(event: Any) {
+	println(event)
 }

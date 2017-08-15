@@ -3,6 +3,7 @@ package com.pot
 import kotlin.browser.*
 import kotlinx.html.*
 import kotlinx.html.dom.*
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.stream.createHTML
 import kotlin.js.Date
 
@@ -76,5 +77,9 @@ val tick = {
 }
 
 fun onButtonClick(event: Any) {
+	window.alert("Something in log")
+	// просто выводит текст
 	println(event)
+	// выводит объект, как привыкли
+	console.log(event)
 }

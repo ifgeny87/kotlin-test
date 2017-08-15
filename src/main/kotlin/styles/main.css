@@ -1,3 +1,5 @@
 div {
-	background : yellow;
+	background : greenyellow;
+	border: 1px dashed gray;
+	margin: 3px;
 }

@@ -4,46 +4,68 @@ import kotlin.browser.*
 import kotlinx.html.*
 import kotlinx.html.dom.*
 import kotlinx.html.stream.createHTML
+import kotlin.js.Date
+
+/**
+ * Точка старта
+ */
+fun main(args: Array<String>) {
+	printHello()
+}
 
 fun printHello() {
-	window.onload = {
-		document.body!!.append {
-			div {
-				id = "container"
-				style = "color: green"
-				+"Here is container"
-			}
-		}
+	// пример создания div :: String Type
+	val div1 = createHTML().div {
+		id = "test-div"
+		+"hello"
 	}
 
-	var counter = 0
-
-	window.setInterval({
-		counter++
-
-		val myDiv = document.create.div("panel") {
-			p {
-				+"Here is "
-				a("http://kotlinlang.org") { +"official Kotlin site" }
-			}
-		}
-
-		document.getElementById("container")!!
-				.appendChild(myDiv)
+	// подписываемся на загрузку window
+	window.onload = {
+		document.body!!
 				.append {
 					div {
-						+"added at $counter"
+						+"Div text = "
+						+div1
+					}
+					div {
+						id = "container"
+						style = "color: red"
+						+"Here is container"
 					}
 				}
 
-		println(createHTML().div { +"New Div" })
-	}, 5_000)
+		nextTick()
+	}
 }
 
-fun onButtonClick(a: Any) {
-	println(a)
+fun nextTick() {
+	window.setTimeout(tick, counter * counter * 1_000)
 }
 
-fun main(args: Array<String>) {
-	printHello()
+var counter = 0
+
+val tick = {
+	counter++
+
+	val div2 = document.create.div("panel") {
+		blockQuote {
+			+"Here is "
+			a("http://kotlinlang.org") { +"official Kotlin site" }
+			br
+			+"Factorial of $counter is ${factorial(counter)}"
+		}
+	}
+
+	document.getElementById("container")
+			?.appendChild(div2)
+			?.append {
+				div {
+					+"added at $counter"
+				}
+			}
+
+	println("tick-tack " + Date())
+
+	nextTick()
 }
